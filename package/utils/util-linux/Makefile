@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=util-linux
-PKG_VERSION:=2.37
+PKG_VERSION:=2.37.3
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/utils/$(PKG_NAME)/v2.37
-PKG_HASH:=bd07b7e98839e0359842110525a3032fdb8eaf3a90bedde3dd1652d32d15cce5
+PKG_HASH:=590c592e58cd6bf38519cb467af05ce6a1ab18040e3e3418f24bcfb2f55f9776
 PKG_CPE_ID:=cpe:/a:kernel:util-linux
 
 PKG_LICENSE:=GPL-2.0-only
@@ -317,6 +317,16 @@ define Package/lscpu/description
  lscpu displays information about the CPU architecture
 endef
 
+define Package/lslocks
+$(call Package/util-linux/Default)
+  TITLE:=list local system locks
+  DEPENDS:= +libmount +libsmartcols
+endef
+
+define Package/lslocks/description
+ lslocks lists information about all the currently held file locks in a Linux system
+endef
+
 define Package/more
 $(call Package/util-linux/Default)
   TITLE:=filter for paging through text one screenful at a time
@@ -532,6 +542,7 @@ CONFIGURE_ARGS += \
 	--disable-lslogins		\
 	--disable-runuser		\
 	--disable-chfn-chsh		\
+	--disable-raw			\
 	--without-python		\
 	--without-udev			\
 	--without-readline		\
@@ -704,6 +715,11 @@ define Package/lscpu/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/lscpu $(1)/usr/bin/
 endef
 
+define Package/lslocks/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/lslocks $(1)/usr/bin/
+endef
+
 define Package/more/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/more $(1)/usr/bin/
@@ -831,6 +847,7 @@ $(eval $(call BuildPackage,look))
 $(eval $(call BuildPackage,losetup))
 $(eval $(call BuildPackage,lsblk))
 $(eval $(call BuildPackage,lscpu))
+$(eval $(call BuildPackage,lslocks))
 $(eval $(call BuildPackage,more))
 $(eval $(call BuildPackage,mcookie))
 $(eval $(call BuildPackage,mount-utils))
